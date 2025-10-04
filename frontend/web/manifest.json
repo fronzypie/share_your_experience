@@ -1,0 +1,12 @@
+{
+    "name": "InterviewHub",
+    "short_name": "InterviewHub",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#3f51b5",
+    "description": "Share and discover interview experiences",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false
+}
+

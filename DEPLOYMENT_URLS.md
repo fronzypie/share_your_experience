@@ -3,8 +3,8 @@
 ## Live Application
 
 **Frontend (User Interface):**
-- URL: https://interviewhub-gto09p9fq-ankits-projects-bfc4b3ed.vercel.app
-- Platform: Vercel
+- URL: https://darling-axolotl-ce4cbd.netlify.app
+- Platform: Netlify
 - Status: ✅ Live
 
 **Backend (API Server):**

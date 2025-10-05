@@ -3,7 +3,7 @@
 ## Live Application
 
 **Frontend (User Interface):**
-- URL: https://interviewhub-ls170dv7w-ankits-projects-bfc4b3ed.vercel.app
+- URL: https://interviewhub-gto09p9fq-ankits-projects-bfc4b3ed.vercel.app
 - Platform: Vercel
 - Status: ✅ Live
 

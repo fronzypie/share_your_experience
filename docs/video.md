@@ -1,160 +1,187 @@
-# Demo Video Script
+# Demo Video Notes
 
-## 3-5 Minute Walkthrough
+These are my notes for recording the 3-5 minute walkthrough video. Mainly for my own reference but leaving it here in case it helps anyone else.
 
-### Introduction (30 seconds)
-"Hello! I'm going to demonstrate InterviewHub, a full-stack web application built with Flutter Web and Flask that allows users to share and discover interview experiences."
+## The Video Plan (3-5 minutes total)
 
-### 1. Application Overview (30 seconds)
-- Show the landing page
-- "The app features a clean, modern Material Design interface"
-- "Built from scratch using Flutter for frontend and Flask with SQLite for backend"
+### Intro (30 seconds)
+"Hey! This is InterviewHub - a full-stack web app I built where people can share their interview experiences. It's built with Flutter Web for the frontend and Flask/Python for the backend with a SQLite database."
 
-### 2. Authentication Flow (1 minute)
-- **Registration**:
-  - Click "Sign Up"
-  - Fill in username and password
-  - Show validation (password must be 6+ characters)
-  - Successfully register
-  - "Passwords are securely hashed using Werkzeug"
+Keep it casual, don't read from a script.
 
-- **Login**:
-  - Login with credentials
-  - "Session persists using bearer tokens"
+### Quick Overview (30 seconds)
+- Show the main page
+- "So it's got this clean Material Design interface"
+- "Everything's built from scratch, no templates or anything"
 
-### 3. Main Feed Features (1.5 minutes)
-- **Experience List**:
-  - Show paginated list of experiences
-  - Point out key information: job title, company, difficulty badge, timeline
+### Authentication Demo (1 minute)
 
-- **Search**:
-  - Search for "Google" or "Engineer"
-  - Show filtered results
-  - "Full-text search across titles, companies, and descriptions"
+**Registration:**
+- Click the Sign Up link
+- Fill in a username and password
+- Show the validation - try a short password first to show the error
+- Then use a valid one and register successfully
+- "Passwords are hashed using Werkzeug so they're never stored in plain text"
 
-- **Filter**:
-  - Select "Medium" difficulty filter
-  - Show filtered results
+**Login:**
+- Login with the account I just made
+- "The session uses bearer tokens that persist in local storage"
 
-- **Sort**:
-  - Change sort to "By Difficulty"
-  - Show reordered list
+### Main Feed Features (1.5 minutes)
 
-- **Pagination**:
-  - Click "Next" and "Previous" buttons
-  - Show page numbers updating
+Show off the main functionality:
 
-### 4. CRUD Operations (1.5 minutes)
-- **Create**:
-  - Click "Share Your Experience" button
-  - Fill out form:
-    - Job Title: "Software Engineer"
-    - Company: "Google"
-    - Difficulty: "Medium"
-    - Description: Brief interview experience
-    - Offer Received: Toggle on
-    - Application Date: Select date
-    - Final Decision Date: Select date
-  - "Notice the calculated timeline field updates automatically"
-  - Submit the form
-  - "This demonstrates the calculated field requirement - days derived from two date inputs"
+**The List:**
+- Scroll through some experiences
+- Point out the info on each card - job title, company, difficulty badge, timeline
+- "So each card shows the key info at a glance"
 
-- **Read**:
-  - Click on the newly created experience
-  - Show detailed view with all fields
-  - Point out:
-    - All text fields
-    - Enum field (difficulty)
-    - Boolean field (offer received)
-    - Calculated field (timeline days)
+**Search:**
+- Type something like "Google" or "Engineer" in the search bar
+- Show the filtered results
+- "Search works across job titles, companies, and descriptions"
 
-- **Update**:
-  - Click Edit button
-  - Modify some fields
-  - Submit
-  - "Users can only edit their own posts"
+**Filter:**
+- Use the difficulty dropdown to filter by Medium
+- Show how the list updates
+- "Can filter by interview difficulty"
 
-- **Delete**:
-  - Click Delete button
-  - Show confirmation dialog
-  - Confirm deletion
-  - "Again, only the author can delete their posts"
+**Sort:**
+- Try different sort options (by date, by difficulty)
+- Show how the order changes
+- "Sort by whatever makes sense for what you're looking for"
 
-### 5. Code Quality & Architecture (30 seconds)
-- Briefly show code structure:
-  - "Clean separation of concerns"
-  - "Backend: SQLAlchemy models with relationships"
-  - "Frontend: Provider for state management"
-  - "RESTful API design"
-  - "OOP principles: encapsulation, modularity"
+**Pagination:**
+- Click through a few pages
+- Show the page numbers
+- "Paginated so it doesn't try to load everything at once"
 
-### 6. Technical Highlights (30 seconds)
-- "All assignment requirements met:"
-  - ✅ Authentication system
-  - ✅ Text, enum, boolean fields
-  - ✅ Calculated field (timeline)
-  - ✅ Full CRUD operations
-  - ✅ Pagination (10 per page)
-  - ✅ Filtering and sorting
-  - ✅ Bonus: Search functionality
+### CRUD Operations Demo (1.5 minutes)
 
-### Conclusion (20 seconds)
-- "The application is fully functional and ready for deployment"
-- "Comprehensive documentation included in README"
-- "All code follows OOP principles and industry best practices"
-- "Thank you!"
+This is the important part for the assignment requirements.
 
-## Recording Tips
+**Create:**
+- Click "Share Your Experience" button
+- Fill out the form:
+  - Job Title: "Software Engineer"
+  - Company: "Amazon" (or whatever)
+  - Difficulty: "Medium"
+  - Description: "Write something brief but realistic"
+  - Toggle the "Offer Received" switch to yes
+  - Pick an application date
+  - Pick a final decision date
+- "See how the timeline field updates automatically? That's the calculated field requirement - it figures out the days between the two dates"
+- Submit it
+- "And there it is in the feed"
 
-1. **Preparation**:
-   - Have sample data in the database
-   - Test the recording software
-   - Practice the demo flow
-   - Ensure backend and frontend are running
+**Read:**
+- Click on the experience I just created
+- Show the detail page with everything
+- Point out each type of field:
+  - Text fields (title, company, description)
+  - Enum field (difficulty dropdown)
+  - Boolean field (offer received toggle)
+  - Calculated field (timeline days)
+- "So that covers all the required field types"
 
-2. **During Recording**:
-   - Speak clearly and at a moderate pace
-   - Highlight key features as you interact
-   - Keep the demo focused and concise
-   - Show the calculated field working
+**Update:**
+- Click the Edit button
+- Change something (maybe the description or difficulty)
+- Save it
+- "You can only edit your own posts - if you try to edit someone else's it won't let you"
 
-3. **Editing**:
-   - Trim any silent pauses
-   - Add text overlays for key points
-   - Ensure video is 3-5 minutes
-   - Export in 1080p
+**Delete:**
+- Click the Delete button
+- Show the confirmation popup
+- Actually delete it
+- "Same with delete - only the person who posted it can remove it"
 
-4. **Upload**:
-   - Upload to YouTube or similar
-   - Make it unlisted or public
-   - Add the link to your submission
+### Quick Code Mention (30 seconds)
+
+Optional - only if there's time:
+- Briefly show the project structure
+- "Clean separation - models, services, routes"
+- "Backend uses SQLAlchemy models with relationships"
+- "Frontend uses Provider for state management"
+- "RESTful API design"
+- "Following OOP principles throughout"
+
+### Wrap Up Requirements (30 seconds)
+"So that covers everything required for the assignment:"
+- ✅ Authentication system with hashed passwords
+- ✅ Text fields, enum, boolean fields
+- ✅ Calculated field (timeline days)
+- ✅ Full CRUD operations
+- ✅ Pagination (10 items per page)
+- ✅ Filtering by difficulty
+- ✅ Sorting options
+- ✅ Plus bonus search functionality
+
+"Everything's deployed and working, documentation's in the README. Thanks for watching!"
+
+## Recording Tips (Notes to Self)
+
+**Before recording:**
+- Make sure backend and frontend are both running
+- Have some sample data already in the database
+- Close unnecessary tabs/apps
+- Test the screen recording software first
+- Maybe do a practice run?
+
+**While recording:**
+- Speak clearly but naturally
+- Don't go too fast - give things time to load
+- If something breaks, just start over (happens)
+- Make sure to actually show the calculated field working
+- Don't forget to mention the field types
+
+**After recording:**
+- Trim any dead air at start/end
+- Can add text overlays if needed ("CRUD Operations", etc.)
+- Keep it 3-5 minutes - don't go over
+- Export at 1080p
+- Check audio levels
+
+**Upload:**
+- YouTube works fine (can set to unlisted)
+- Add the link to README
+- Maybe add timestamps in the description
 
 ## Screen Recording Commands
 
-### macOS
+### macOS (what I'm using)
 ```bash
-# Built-in QuickTime
-# Open QuickTime Player > File > New Screen Recording
+# QuickTime is built-in
+# Just open QuickTime Player > File > New Screen Recording
 
-# Or use ffmpeg
+# Or if you have ffmpeg:
 ffmpeg -f avfoundation -i "1:0" -r 30 -s 1920x1080 demo.mp4
 ```
 
 ### Windows
 ```bash
-# Built-in Xbox Game Bar
+# Xbox Game Bar is built-in
 # Press Win + G
 
-# Or use OBS Studio (free)
+# Or OBS Studio (free and works great)
 ```
 
 ### Linux
 ```bash
-# Using ffmpeg
 ffmpeg -f x11grab -s 1920x1080 -i :0.0 -r 30 demo.mp4
 ```
 
-## Post-Recording
+## What Actually Matters
 
-Save the video as `demo.mp4` in the `/docs` folder or upload to a video hosting service and include the link in your README.
+The assignment wants to see:
+1. The app actually works
+2. All required features are there
+3. CRUD operations work correctly
+4. The calculated field exists
+5. Code is clean and organized
 
+So focus on showing those things clearly. The video doesn't have to be fancy, just functional.
+
+---
+
+Alright, that's the plan. Should be straightforward to record once I get everything set up.

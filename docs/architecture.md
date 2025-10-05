@@ -1,8 +1,8 @@
-# Architecture Documentation
+# How This Thing is Built
 
-## System Architecture
+So here's how I structured the whole application. It's a pretty standard web app setup, but I'll walk you through it.
 
-### High-Level Overview
+## The Big Picture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -18,8 +18,8 @@
 │                                                           │
 │  ┌─────────────────────────────────────────────────┐   │
 │  │           Route Handlers                         │   │
-│  │  • /api/auth/*  (Authentication)                │   │
-│  │  • /api/experiences/*  (CRUD Operations)        │   │
+│  │  • /api/auth/*  (Login/Register)                │   │
+│  │  • /api/experiences/*  (All the CRUD stuff)     │   │
 │  └─────────────────────────────────────────────────┘   │
 │                       │                                  │
 │  ┌─────────────────────────────────────────────────┐   │
@@ -40,344 +40,325 @@
 └─────────────────────────────────────────────────────────┘
 ```
 
-## Frontend Architecture (Flutter Web)
+Pretty straightforward - browser talks to Flask, Flask talks to database. Nothing fancy.
 
-### Directory Structure
+## Frontend (Flutter Web)
+
+### How I Organized the Code
+
 ```
 frontend/lib/
-├── main.dart                 # Entry point & app configuration
-├── models/                   # Data models
+├── main.dart                 # Where everything starts
+├── models/                   # Data classes
 │   ├── user.dart
 │   └── experience.dart
-├── services/                 # Business logic & API calls
-│   ├── api_service.dart      # HTTP client wrapper
-│   └── auth_service.dart     # Authentication state management
-├── screens/                  # UI screens (pages)
+├── services/                 # API calls and business logic
+│   ├── api_service.dart      # Handles all HTTP requests
+│   └── auth_service.dart     # Manages who's logged in
+├── screens/                  # The actual pages
 │   ├── login_screen.dart
 │   ├── registration_screen.dart
 │   ├── main_feed_screen.dart
 │   ├── experience_detail_screen.dart
 │   └── create_edit_experience_screen.dart
-└── widgets/                  # Reusable UI components
+└── widgets/                  # Reusable components
     └── experience_card.dart
 ```
 
 ### State Management
-- **Provider Pattern**: Used for dependency injection and state management
-- **Services**: `AuthService` notifies listeners when auth state changes
-- **Local Storage**: `SharedPreferences` for persisting auth tokens
 
-### Data Flow
+I'm using Provider for state management. Basically:
+- Services hold the state (like who's logged in, what data we have)
+- Widgets listen to those services
+- When something changes, widgets automatically rebuild
+
+Also using SharedPreferences to save the auth token locally so you don't have to login every time.
+
+### How Data Flows
 
 ```
-User Action → Screen → Service → API Service → Backend
-                 ↑                                 │
-                 └─────────── Response ────────────┘
+User clicks something → Screen handles it → Calls a Service → 
+Service talks to API → Gets response → Updates state → 
+Screen rebuilds with new data
 ```
 
-## Backend Architecture (Flask)
+## Backend (Flask + Python)
 
-### File Structure
+### File Organization
+
 ```
 backend/
-├── app.py                    # Main application file
-│   ├── Models (User, Experience)
-│   ├── Routes (Auth, CRUD)
-│   └── Database initialization
-└── requirements.txt          # Python dependencies
+├── app.py                    # Main Flask app (used to be one big file, now it's modular)
+│   ├── Routes
+│   ├── Models
+│   └── Database setup
+├── models/                   # Database models
+│   ├── user.py
+│   └── experience.py
+├── services/                 # Business logic
+│   ├── auth_service.py
+│   └── experience_service.py
+├── routes/                   # API endpoints
+│   ├── auth_routes.py
+│   └── experience_routes.py
+├── utils/                    # Helper stuff
+│   ├── validators.py
+│   └── decorators.py
+├── config.py                 # Configuration
+└── requirements.txt          # Dependencies
 ```
 
 ### Database Models
 
-#### User Model
-```python
-class User:
-    - id: Integer (PK)
-    - username: String (Unique)
-    - password_hash: String
-    - experiences: Relationship → Experience[]
-    
-    Methods:
-    - set_password(password)
-    - check_password(password)
-    - to_dict()
-```
+#### User
 
-#### Experience Model
-```python
-class Experience:
-    - id: Integer (PK)
-    - job_title: String
-    - company_name: String
-    - experience_description: Text
-    - difficulty: String (Enum)
-    - offer_received: Boolean
-    - application_date: Date
-    - final_decision_date: Date
-    - user_id: Integer (FK → User)
-    - created_at: DateTime
-    
-    Methods:
-    - calculate_timeline_days()  # Calculated field
-    - to_dict()
-```
+Just the basics:
+- ID (auto-generated)
+- Username (unique)
+- Password (hashed, obviously)
+- Their posts (relationship to experiences)
+
+Has methods to hash/check passwords and convert to JSON.
+
+#### Experience
+
+This is the main thing - interview experiences:
+- ID
+- Job title
+- Company name  
+- Description
+- Difficulty (Easy/Medium/Hard)
+- Whether they got an offer (true/false)
+- Application date
+- Final decision date
+- Who posted it (foreign key to User)
+- When it was created
+
+The timeline (days between dates) is calculated automatically.
 
 ### API Endpoints
 
-#### Authentication Endpoints
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| POST | `/api/auth/register` | Register new user | No |
-| POST | `/api/auth/login` | Login user | No |
-| POST | `/api/auth/logout` | Logout user | Yes |
-| GET | `/api/auth/me` | Get current user | Yes |
+#### Auth Stuff
+| What | Where | What it does | Need to be logged in? |
+|------|-------|--------------|----------------------|
+| POST | `/api/auth/register` | Make an account | Nope |
+| POST | `/api/auth/login` | Log in | Nope |
+| POST | `/api/auth/logout` | Log out | Yeah |
+| GET | `/api/auth/me` | Check who you are | Yeah |
 
-#### Experience Endpoints
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| GET | `/api/experiences` | List all experiences | No |
-| GET | `/api/experiences/:id` | Get single experience | No |
-| POST | `/api/experiences` | Create experience | Yes |
-| PUT | `/api/experiences/:id` | Update experience | Yes (Owner) |
-| DELETE | `/api/experiences/:id` | Delete experience | Yes (Owner) |
+#### Experience Stuff
+| What | Where | What it does | Need to be logged in? |
+|------|-------|--------------|----------------------|
+| GET | `/api/experiences` | See all posts | Nope |
+| GET | `/api/experiences/:id` | See one post | Nope |
+| POST | `/api/experiences` | Create a post | Yeah |
+| PUT | `/api/experiences/:id` | Edit your post | Yeah (and it has to be yours) |
+| DELETE | `/api/experiences/:id` | Delete your post | Yeah (and it has to be yours) |
 
-#### Query Parameters for GET /api/experiences
-- `page`: Page number (default: 1)
-- `per_page`: Items per page (default: 10)
-- `difficulty`: Filter by difficulty (Easy/Medium/Hard)
-- `search`: Search term
-- `sort_by`: Sort order (date_desc, date_asc, difficulty)
+#### Query Options for GET /api/experiences
 
-### Authentication Flow
+You can add these to the URL:
+- `page` - Which page (starts at 1)
+- `per_page` - How many per page (default is 10)
+- `difficulty` - Filter by Easy/Medium/Hard
+- `search` - Search text
+- `sort_by` - How to sort (date_desc, date_asc, difficulty)
+
+### How Login Works
 
 ```
-┌────────────┐                ┌────────────┐
-│   Client   │                │   Server   │
-└──────┬─────┘                └──────┬─────┘
-       │                             │
-       │ POST /api/auth/register     │
-       ├────────────────────────────►│
-       │   {username, password}      │
-       │                             │
-       │◄────────────────────────────┤
-       │   {user, token}             │
-       │                             │
-       │ Subsequent requests         │
-       ├────────────────────────────►│
-       │ Header: Authorization:      │
-       │         Bearer <token>      │
-       │                             │
+Client sends username/password
+    ↓
+Server checks if they're valid
+    ↓
+If good: Generate a random token, save it, send it back
+    ↓
+Client saves the token
+    ↓
+For protected routes: Client sends "Authorization: Bearer {token}"
+    ↓
+Server checks if token is valid
+    ↓
+If valid: Let them do the thing
 ```
 
-### Session Management
-- **Token Generation**: Using Python's `secrets` module
-- **Storage**: In-memory dictionary (for development)
-- **Production Note**: Should use Redis or similar for production
+### Session Tokens
 
-## Database Schema
+Right now I'm just using Python's `secrets` module to generate random tokens and storing them in a dictionary. 
 
-### Entity Relationship Diagram
+**Note:** This works for development but in production you'd want to use Redis or something that persists across server restarts.
+
+## Database Setup
+
+### How the Tables Relate
 
 ```
 ┌─────────────────────┐
 │       User          │
 ├─────────────────────┤
-│ id (PK)             │
-│ username (UNIQUE)   │
+│ id (primary key)    │
+│ username (unique)   │
 │ password_hash       │
 └──────────┬──────────┘
            │
-           │ 1:N
+           │ One user can have many experiences
            │
 ┌──────────▼──────────┐
 │    Experience       │
 ├─────────────────────┤
-│ id (PK)             │
+│ id (primary key)    │
 │ job_title           │
 │ company_name        │
-│ experience_desc     │
+│ description         │
 │ difficulty          │
 │ offer_received      │
 │ application_date    │
 │ final_decision_date │
-│ user_id (FK)        │
+│ user_id (foreign)   │
 │ created_at          │
 └─────────────────────┘
 ```
 
-## Data Validation
+Simple one-to-many relationship. A user can post multiple experiences.
 
-### Frontend Validation
-- Username: Required
-- Password: Required, minimum 6 characters
-- Confirm Password: Must match password
-- Job Title: Required
-- Company Name: Required
-- Description: Required
-- Dates: Required, final_date >= application_date
+## Validation
 
-### Backend Validation
-- Duplicate username check
-- Password strength validation
-- Date logic validation
-- Difficulty enum validation
-- Required field checks
+### Frontend
 
-## Security Features
+I validate everything in the UI before even sending to the server:
+- Username and password are required
+- Password needs to be at least 6 characters
+- Confirm password must match
+- All the form fields are required
+- Final date has to be after (or same as) application date
 
-1. **Password Hashing**: Werkzeug's `generate_password_hash` with SHA-256
-2. **Session Tokens**: 64-character hexadecimal tokens
-3. **Authorization**: Bearer token authentication
-4. **Ownership Checks**: Users can only edit/delete their own posts
-5. **CORS**: Configured for cross-origin requests
+### Backend
 
-## Performance Considerations
+I validate again on the server side (never trust the client!):
+- Check if username is already taken
+- Make sure password is strong enough
+- Date logic makes sense
+- Difficulty is actually Easy/Medium/Hard
+- All required fields are there
+
+## Security
+
+Here's what I did to keep things secure:
+1. **Passwords**: Hashed with Werkzeug (SHA-256) - never stored plain text
+2. **Tokens**: Random 64-character hex strings
+3. **Auth**: Bearer token in headers
+4. **Ownership**: You can only edit/delete your own posts
+5. **CORS**: Configured to allow the frontend domain
+
+## Making it Fast
 
 ### Pagination
-- Default 10 items per page
-- Reduces database load
-- Improves frontend rendering
+- Only send 10 items at a time by default
+- Less data = faster load times
+- Database doesn't have to fetch everything
 
 ### Database Indexes
-- Primary keys auto-indexed
-- Username unique constraint creates index
-- Foreign key relationships indexed
+- IDs are automatically indexed
+- Username has an index because it's unique
+- Foreign keys are indexed too
 
-### Frontend Optimization
-- Stateful widgets only where needed
-- Efficient re-rendering with Provider
-- Form validation on client side
-- Optimistic UI updates
+### Frontend Tricks
+- Only use Stateful widgets when actually needed
+- Provider handles efficient re-renders
+- Validate on client side to avoid unnecessary API calls
 
-## Deployment Architecture
+## Deployment
 
-### Recommended Setup
+### Where Things Should Go
 
 ```
 ┌─────────────────────────────────────────────┐
-│         CDN / Static Hosting                │
-│      (Vercel, Netlify, Firebase)            │
+│         Static Hosting / CDN                │
+│      (Netlify, Vercel, Firebase)            │
 │          Flutter Web Build                  │
 └──────────────────┬──────────────────────────┘
                    │
-                   │ API Calls
+                   │ API Calls (HTTPS)
                    │
 ┌──────────────────▼──────────────────────────┐
-│         Application Server                   │
-│      (Render, Heroku, AWS EC2)              │
-│            Flask Backend                     │
+│         Backend Server                       │
+│      (Render, Heroku, etc.)                 │
+│            Flask App                         │
 └──────────────────┬──────────────────────────┘
                    │
                    │
 ┌──────────────────▼──────────────────────────┐
 │         Database                             │
-│      (SQLite file or PostgreSQL)            │
+│   (SQLite file or upgrade to PostgreSQL)    │
 └─────────────────────────────────────────────┘
 ```
 
-### Environment Variables
-- `SECRET_KEY`: For session management
-- `DATABASE_URL`: Database connection string (if not SQLite)
-- `FLASK_ENV`: production/development
+Currently deployed:
+- Frontend: Netlify
+- Backend: Render
+- Database: SQLite (on Render's server)
 
-## Scalability Considerations
+### Environment Variables You'll Need
 
-### Current Architecture (MVP)
-- In-memory session storage
-- SQLite database
-- Single server deployment
+- `SECRET_KEY` - For Flask sessions
+- `DATABASE_URL` - If you upgrade from SQLite
+- `FLASK_ENV` - Set to "production" when deploying
 
-### Production Recommendations
-1. **Session Storage**: Migrate to Redis
-2. **Database**: Upgrade to PostgreSQL or MySQL
+## What I'd Do Differently for Production
+
+Right now it's good for an assignment/MVP, but for real production use:
+
+1. **Session Storage**: Move from in-memory dict to Redis
+2. **Database**: Switch from SQLite to PostgreSQL
 3. **Caching**: Add Redis for frequently accessed data
-4. **Load Balancing**: Add nginx or cloud load balancer
-5. **Static Assets**: Serve through CDN
-6. **Monitoring**: Add logging and error tracking (Sentry)
+4. **Load Balancing**: Put nginx in front
+5. **CDN**: Serve static files through a CDN
+6. **Monitoring**: Add error tracking (like Sentry)
+7. **Backups**: Automated database backups
+8. **HTTPS**: Enforce HTTPS everywhere
+9. **Rate Limiting**: Prevent API abuse
+10. **Testing**: Add unit and integration tests
 
-## Testing Strategy
-
-### Backend Testing
-- Unit tests for models
-- Integration tests for API endpoints
-- Authentication flow tests
-- CRUD operation tests
-
-### Frontend Testing
-- Widget tests for UI components
-- Integration tests for user flows
-- End-to-end tests with Flutter Driver
-
-### Manual Testing Checklist
-- [ ] User registration
-- [ ] User login
-- [ ] Create experience
-- [ ] View experience list
-- [ ] Search experiences
-- [ ] Filter by difficulty
-- [ ] Sort experiences
-- [ ] Pagination
-- [ ] Edit own experience
-- [ ] Delete own experience
-- [ ] View experience details
-- [ ] Logout
-
-## Code Quality Metrics
-
-### Backend
-- **Lines of Code**: ~400
-- **Functions**: 15 endpoints
-- **Models**: 2 classes
-- **Test Coverage**: N/A (MVP)
-
-### Frontend
-- **Lines of Code**: ~1500
-- **Screens**: 5 main screens
-- **Widgets**: 1 reusable widget
-- **Services**: 2 service classes
-- **Models**: 2 data models
-
-## OOP Principles Demonstrated
+## OOP Principles I Used
 
 ### Encapsulation
-- Models encapsulate data and behavior
-- Services hide implementation details
+Models handle their own data and methods (like password hashing is inside the User model)
 
 ### Abstraction
-- API Service abstracts HTTP calls
-- Auth Service abstracts authentication logic
+Services hide the messy details - you just call `authService.login()` and don't worry about how it works
 
 ### Modularity
-- Clear separation of concerns
-- Each file has single responsibility
+Everything has its own file and purpose - models, services, routes, utils all separated
 
 ### Inheritance
-- StatefulWidget/StatelessWidget inheritance
-- db.Model inheritance for SQLAlchemy
+Flutter widgets extend StatefulWidget/StatelessWidget, SQLAlchemy models extend db.Model
 
-## Future Enhancements
+## What Could Be Added Later
 
-1. **Features**
-   - User profiles with avatars
-   - Comments on experiences
-   - Upvote/downvote system
-   - Email notifications
-   - Advanced filters (date range, location)
+Some ideas I had but didn't implement (time constraints):
 
-2. **Technical**
-   - Real-time updates with WebSockets
-   - File upload for resume/documents
-   - Export experiences to PDF
-   - OAuth integration (Google, LinkedIn)
-   - Progressive Web App (PWA) features
+**Features:**
+- User profiles with pictures
+- Comments on experiences
+- Upvote/downvote system
+- Email notifications
+- More filters (location, date range)
+- Tags/categories
 
-3. **Analytics**
-   - View counts
-   - Popular companies
-   - Average interview difficulty by company
-   - Success rate statistics
+**Technical:**
+- WebSockets for real-time updates
+- File uploads
+- Export to PDF
+- OAuth (Google/LinkedIn login)
+- Progressive Web App features
+- Dark mode
 
-## Conclusion
+**Analytics:**
+- View counts
+- Most interviewed companies
+- Average difficulty by company
+- Success rate stats
 
-This architecture provides a solid foundation for a production-ready interview experience sharing platform. The modular design allows for easy maintenance and future enhancements while following industry best practices and OOP principles.
+## Final Thoughts
 
+The architecture is pretty standard for a modern web app. Nothing too crazy, just good separation of concerns and following best practices. Could definitely scale it up if needed, but for now it does what it needs to do.

@@ -19,10 +19,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Use environment variable or default to localhost
+    const apiUrl = String.fromEnvironment(
+      'API_URL',
+      defaultValue: 'http://localhost:8000',
+    );
+    
     return MultiProvider(
       providers: [
         Provider<ApiService>(
-          create: (_) => ApiService(baseUrl: 'http://localhost:8000'),
+          create: (_) => ApiService(baseUrl: apiUrl),
         ),
         ChangeNotifierProxyProvider<ApiService, AuthService>(
           create: (context) => AuthService(

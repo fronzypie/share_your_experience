@@ -6,7 +6,7 @@ A web platform where people can share their interview experiences and learn from
 
 **Live Application:** https://darling-axolotl-ce4cbd.netlify.app
 
-**Demo Video:** [Add your video link here]
+**Demo Video:** [Watch on YouTube](https://youtu.be/-fTT1_u8nGs)
 
 ## What This Project Does
 

@@ -64,8 +64,15 @@ def initialize_extensions(app):
     # Initialize database
     db.init_app(app)
     
-    # Initialize CORS
-    CORS(app, resources={r"/api/*": {"origins": app.config['CORS_ORIGINS']}})
+    # Initialize CORS - Allow all origins with credentials
+    CORS(app, 
+         resources={r"/api/*": {
+             "origins": "*",
+             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+             "allow_headers": ["Content-Type", "Authorization"],
+             "expose_headers": ["Content-Type", "Authorization"],
+             "supports_credentials": False
+         }})
 
 
 def register_blueprints(app):

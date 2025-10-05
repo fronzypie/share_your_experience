@@ -2,6 +2,12 @@
 
 A web platform where people can share their interview experiences and learn from others. I built this using Flutter for the frontend and Flask for the backend.
 
+## Demo
+
+**Live Application:** https://darling-axolotl-ce4cbd.netlify.app
+
+**Demo Video:** [Add your video link here]
+
 ## What This Project Does
 
 InterviewHub lets users share detailed interview experiences - what company they interviewed with, how difficult it was, whether they got an offer, and all the details that might help someone else preparing for interviews. Think of it like a community knowledge base for interview prep.

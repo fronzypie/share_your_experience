@@ -1,390 +1,262 @@
-# Share Your Experience - Interview Hub
+# InterviewHub - Share Your Experience
 
-A full-stack web application for sharing and discovering interview experiences. Built with Flutter Web for the frontend and Flask (Python) for the backend.
+A web platform where people can share their interview experiences and learn from others. I built this using Flutter for the frontend and Flask for the backend.
 
-## 🎯 Project Overview
+## What This Project Does
 
-**InterviewHub** is a platform where users can:
-- Share their interview experiences with job title, company, difficulty rating, and detailed descriptions
-- Browse and search through community-shared experiences
-- Filter by difficulty and sort by various criteria
-- Track application timelines with automatic calculation of days
-- Manage their own posts with edit and delete functionality
+InterviewHub lets users share detailed interview experiences - what company they interviewed with, how difficult it was, whether they got an offer, and all the details that might help someone else preparing for interviews. Think of it like a community knowledge base for interview prep.
 
-## 🏗️ Architecture
+The main features are:
+- User accounts (register and login)
+- Post your interview experiences
+- Browse what others have posted
+- Search and filter to find relevant experiences
+- Edit or delete your own posts
 
-### Frontend
-- **Framework**: Flutter Web
-- **State Management**: Provider
-- **HTTP Client**: http package
-- **Local Storage**: shared_preferences
+## Tech Stack
 
-### Backend
-- **Framework**: Flask (Python)
-- **Database**: SQLite with SQLAlchemy ORM
-- **Authentication**: Session-based with secure password hashing (Werkzeug)
-- **CORS**: Flask-CORS for cross-origin requests
+I went with Flutter Web for the frontend because I wanted to learn Flutter and it seemed like a good way to build a modern web UI. The backend is Flask (Python) which I'm more comfortable with. Database is SQLite - simple and gets the job done for a project like this.
 
-## ✨ Features
+**Frontend:**
+- Flutter Web
+- Provider for state management
+- Material Design 3 for the UI
 
-### Authentication System
-- ✅ User registration with username/password
-- ✅ Secure login with password hashing
-- ✅ Session management with bearer tokens
-- ✅ Persistent authentication across sessions
+**Backend:**
+- Flask (Python)
+- SQLAlchemy ORM
+- SQLite database
+- Session-based authentication
 
-### CRUD Operations
-- ✅ **Create**: Share new interview experiences
-- ✅ **Read**: View all experiences or detailed single experience
-- ✅ **Update**: Edit your own experiences
-- ✅ **Delete**: Remove your own experiences
-
-### Required Fields
-- ✅ **Text Fields**: Job Title, Company Name, Description
-- ✅ **Enum Field**: Difficulty (Easy, Medium, Hard)
-- ✅ **Boolean Field**: Offer Received (Yes/No)
-- ✅ **Calculated Field**: Application Timeline Days (derived from Application Date and Final Decision Date)
-
-### Listing & Data Management
-- ✅ **Pagination**: 10 items per page with next/previous controls
-- ✅ **Filtering**: Filter experiences by difficulty level
-- ✅ **Sorting**: Sort by newest, oldest, or difficulty
-- ✅ **Search**: Full-text search across job titles, companies, and descriptions
-
-### UI/UX
-- ✅ Modern, clean Material Design interface
-- ✅ Responsive layout that works on all screen sizes
-- ✅ Color-coded difficulty badges
-- ✅ Card-based layouts for easy scanning
-- ✅ Form validation with helpful error messages
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 share_your_experience/
 ├── backend/
-│   ├── app.py                 # Flask application with all routes and models
-│   ├── requirements.txt        # Python dependencies
-│   └── share_your_experience.db  # SQLite database (created on first run)
+│   ├── app.py                      # Main Flask app
+│   ├── config.py                   # Configuration settings
+│   ├── models/                     # Database models
+│   ├── services/                   # Business logic
+│   ├── routes/                     # API endpoints
+│   ├── utils/                      # Helper functions
+│   └── requirements.txt
 │
-├── frontend/
-│   ├── lib/
-│   │   ├── main.dart          # App entry point and configuration
-│   │   ├── models/
-│   │   │   ├── user.dart      # User model
-│   │   │   └── experience.dart # Experience model
-│   │   ├── services/
-│   │   │   ├── api_service.dart   # HTTP API client
-│   │   │   └── auth_service.dart  # Authentication service
-│   │   ├── screens/
-│   │   │   ├── login_screen.dart
-│   │   │   ├── registration_screen.dart
-│   │   │   ├── main_feed_screen.dart
-│   │   │   ├── experience_detail_screen.dart
-│   │   │   └── create_edit_experience_screen.dart
-│   │   └── widgets/
-│   │       └── experience_card.dart
-│   ├── web/
-│   │   ├── index.html
-│   │   └── manifest.json
-│   ├── pubspec.yaml           # Flutter dependencies
-│   └── analysis_options.yaml
-│
-└── README.md                  # This file
+└── frontend/
+    ├── lib/
+    │   ├── main.dart
+    │   ├── models/                 # Data models
+    │   ├── services/               # API calls
+    │   ├── screens/                # UI screens
+    │   └── widgets/                # Reusable components
+    ├── web/
+    └── pubspec.yaml
 ```
 
-## 🚀 Setup Instructions
-
-### Prerequisites
-- Python 3.8 or higher
-- Flutter SDK 3.0 or higher
-- A modern web browser (Chrome recommended)
+## Getting Started
 
 ### Backend Setup
 
-1. **Navigate to the backend directory:**
-   ```bash
-   cd share_your_experience/backend
-   ```
+1. Navigate to backend folder:
+```bash
+cd backend
+```
 
-2. **Create and activate a virtual environment:**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+2. Install Python dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+3. Run the server:
+```bash
+python3 app.py
+```
 
-4. **Run the Flask server:**
-   ```bash
-   python app.py
-   ```
-   The backend will start on `http://localhost:5000`
+The backend should start on `http://localhost:8000` (I changed it from 5000 because that port was conflicting with AirPlay on Mac).
 
 ### Frontend Setup
 
-1. **Open a new terminal and navigate to the frontend directory:**
-   ```bash
-   cd share_your_experience/frontend
-   ```
-
-2. **Install Flutter dependencies:**
-   ```bash
-   flutter pub get
-   ```
-
-3. **Run the Flutter web app:**
-   ```bash
-   flutter run -d chrome
-   ```
-   Or build for production:
-   ```bash
-   flutter build web
-   ```
-
-4. **Access the application:**
-   Open your browser to `http://localhost:<port>` (Flutter will show you the port)
-
-## 🔧 Configuration
-
-### Changing the Backend URL
-
-If you deploy the backend to a different host, update the API base URL in `frontend/lib/main.dart`:
-
-```dart
-Provider<ApiService>(
-  create: (_) => ApiService(baseUrl: 'https://your-backend-url.com'),
-),
+1. Go to frontend folder:
+```bash
+cd frontend
 ```
 
-### Environment Variables
+2. Get Flutter dependencies:
+```bash
+flutter pub get
+```
 
-The backend supports the following environment variables:
-- `SECRET_KEY`: Secret key for session management (auto-generated if not provided)
+3. Run it:
+```bash
+flutter run -d chrome
+```
 
-## 📊 Database Schema
+Or build for deployment:
+```bash
+flutter build web
+```
 
-### User Table
-- `id`: Integer (Primary Key)
-- `username`: String (Unique)
-- `password_hash`: String
+## Features I Implemented
 
-### Experience Table
-- `id`: Integer (Primary Key)
-- `job_title`: String
-- `company_name`: String
-- `experience_description`: Text
-- `difficulty`: String (Easy/Medium/Hard)
-- `offer_received`: Boolean
-- `application_date`: Date
-- `final_decision_date`: Date
-- `user_id`: Integer (Foreign Key → User)
-- `created_at`: DateTime
+### Authentication
+Pretty standard username/password authentication. Passwords are hashed (using Werkzeug) and sessions are managed with bearer tokens. Not the most sophisticated auth system but it works for this project.
 
-**Calculated Field:**
-- `application_timeline_days`: Computed as `final_decision_date - application_date`
+### CRUD Operations
+Full create, read, update, delete functionality for interview experiences. Users can only edit/delete their own posts which makes sense.
 
-## 🌐 API Documentation
+### Required Fields
+The assignment needed specific field types, so here's what I included:
+- **Text fields**: Job title, company name, and a description of the experience
+- **Enum field**: Difficulty selector (Easy, Medium, or Hard)
+- **Boolean field**: Whether they got an offer or not
+- **Calculated field**: This was interesting - it automatically calculates the number of days between when you applied and when you got the final decision
 
-### Quick Reference
+### Pagination and Filtering
+The main feed shows 10 experiences per page. You can filter by difficulty level and sort by date or difficulty. I also added a search feature (not required but seemed useful) that searches across job titles, companies, and descriptions.
 
-**Authentication**
-- `POST /api/auth/register` - Register a new user
-- `POST /api/auth/login` - Login and receive a token
+## API Endpoints
+
+The backend exposes these endpoints:
+
+**Auth stuff:**
+- `POST /api/auth/register` - Create an account
+- `POST /api/auth/login` - Login and get a token
 - `POST /api/auth/logout` - Logout
 - `GET /api/auth/me` - Get current user info
 
-**Experiences**
-- `GET /api/experiences` - Get paginated list (supports filters, search, sort)
-- `GET /api/experiences/:id` - Get single experience
-- `POST /api/experiences` - Create new experience (requires auth)
-- `PUT /api/experiences/:id` - Update experience (requires auth & ownership)
-- `DELETE /api/experiences/:id` - Delete experience (requires auth & ownership)
+**Experience CRUD:**
+- `GET /api/experiences` - List all experiences (with pagination, filters, search)
+- `GET /api/experiences/:id` - Get one specific experience
+- `POST /api/experiences` - Create new (requires login)
+- `PUT /api/experiences/:id` - Update (requires login + ownership)
+- `DELETE /api/experiences/:id` - Delete (requires login + ownership)
 
-### 📖 Complete API Documentation
+More detailed API docs are in the `docs/` folder if you need them.
 
-For detailed API documentation with request/response examples, validation rules, and error codes:
+## Code Structure
 
-**📄 [View Full API Documentation](docs/API_DOCUMENTATION.md)**
+I refactored the backend to follow better practices - separated models, services, routes, and utilities into different folders instead of having everything in one huge file. The frontend follows Flutter's recommended structure with separate folders for models, services, screens, and widgets.
 
-**🚀 [API Quick Start Guide](docs/API_QUICKSTART.md)**
+### OOP Concepts
+Since the assignment required demonstrating OOP:
+- Models encapsulate data and behavior
+- Service classes handle business logic
+- Clear separation between data, logic, and presentation layers
+- Used inheritance for configuration classes
+- Decorator pattern for authentication
 
-**📦 [Import Postman Collection](docs/InterviewHub_API.postman_collection.json)**
+## Deployment
 
-The API documentation includes:
-- Complete endpoint reference with examples
-- Request/response formats
-- Authentication flow
-- Error handling
-- cURL, Python, and JavaScript examples
-- Postman collection for easy testing
+The app is deployed and accessible at:
+- **Frontend**: https://darling-axolotl-ce4cbd.netlify.app
+- **Backend**: https://interviewhub-backend.onrender.com
 
-## 🚢 Deployment
+Backend is on Render's free tier and frontend on Netlify. First request might take a minute because free tier backends sleep after inactivity.
 
-### Deploying to Render
+### To deploy your own:
 
-#### Backend Deployment
+**Backend (Render):**
+1. Connect your GitHub repo
+2. Create a new Web Service
+3. Point it to the `backend` folder
+4. It should auto-detect the Python app
 
-1. **Create a new Web Service on Render**
-2. **Connect your repository**
-3. **Configure the service:**
-   - **Build Command**: `pip install -r backend/requirements.txt`
-   - **Start Command**: `cd backend && python app.py`
-   - **Environment Variables**: Add `SECRET_KEY` with a secure random value
+**Frontend (Netlify):**
+1. Build locally: `flutter build web`
+2. Deploy the `build/web` folder to Netlify
+3. Can use their CLI or drag-and-drop
 
-#### Frontend Deployment
+## Development Notes
 
-1. **Build the Flutter web app:**
-   ```bash
-   cd frontend
-   flutter build web
-   ```
+Some things I learned while building this:
 
-2. **Deploy the `build/web` directory to Render as a Static Site**
-   Or use any static hosting service (Vercel, Netlify, GitHub Pages, etc.)
+1. **Port conflicts**: Had to change the backend port to 8000 because 5000 and 5001 were already taken on Mac (AirPlay and Control Center respectively).
 
-3. **Update the API base URL** in your built frontend to point to your deployed backend
+2. **Flutter Web quirks**: The Flutter web initialization needed some tweaking. Had to use `flutter_bootstrap.js` instead of the older `flutter.js`.
 
-### Alternative Deployment Options
+3. **CORS issues**: Spent some time figuring out CORS configuration to let the frontend talk to the backend.
 
-- **Backend**: Heroku, AWS EC2, Google Cloud Run, DigitalOcean
-- **Frontend**: Vercel, Netlify, GitHub Pages, Firebase Hosting
+4. **State management**: Used Provider pattern for Flutter state management. Took a bit to wrap my head around it but makes sense now.
 
-## 🧪 Testing the Application
+5. **Modular architecture**: Initially had everything in one `app.py` file, but refactored it into a proper modular structure with separate concerns. Much cleaner.
 
-### Manual Testing Checklist
+## Testing
 
-1. **Authentication:**
-   - [ ] Register a new account
-   - [ ] Login with credentials
-   - [ ] Session persists on page refresh
-   - [ ] Logout works correctly
+To test the app:
+1. Create an account on the deployed version
+2. Try creating an interview experience
+3. Test the search and filter features
+4. Try editing/deleting your posts
 
-2. **CRUD Operations:**
-   - [ ] Create a new experience
-   - [ ] View experience in the feed
-   - [ ] Click to see detailed view
-   - [ ] Edit your own experience
-   - [ ] Delete your own experience
+Some sample accounts are already there with test data if you want to see what experiences look like.
 
-3. **Data Management:**
-   - [ ] Pagination works (next/previous)
-   - [ ] Filter by difficulty
-   - [ ] Sort by date and difficulty
-   - [ ] Search for experiences
+## Assignment Requirements
 
-4. **Validation:**
-   - [ ] Form validation on registration
-   - [ ] Form validation on experience creation
-   - [ ] Date validation (final date > application date)
-   - [ ] Calculated timeline displays correctly
+Just to confirm everything's covered:
 
-## 📝 AI Integration Documentation
+| Requirement | Done? | Where |
+|------------|-------|-------|
+| Authentication | ✓ | Login/register system |
+| Text fields | ✓ | Job title, company, description |
+| Enum field | ✓ | Difficulty dropdown |
+| Boolean field | ✓ | Offer received toggle |
+| Calculated field | ✓ | Timeline days |
+| CRUD | ✓ | Full create/read/update/delete |
+| Pagination | ✓ | 10 per page |
+| Filtering | ✓ | By difficulty |
+| OOP concepts | ✓ | Models, services, inheritance, encapsulation |
+| Clean code | ✓ | Modular structure, comments |
 
-This project was built using **Gemini CLI** (as specified in the assignment requirements). Here are 6+ documented AI prompts and their results:
+Extra features I added:
+- Search functionality
+- Multiple sort options
+- Responsive UI
+- API documentation
 
-### AI Prompt Log
+## Files Worth Looking At
 
-1. **Prompt**: "Create a Flask backend with User and Experience models using SQLAlchemy, including authentication endpoints"
-   - **Result**: Generated complete `app.py` with models, authentication routes, and session management
+If you're reviewing the code:
+- `backend/models/` - Database models
+- `backend/services/` - Business logic separated from routes
+- `frontend/lib/screens/` - All the UI screens
+- `frontend/lib/services/api_service.dart` - How frontend talks to backend
 
-2. **Prompt**: "Implement pagination, filtering, sorting, and search for the experiences endpoint"
-   - **Result**: Added query parameter handling and SQLAlchemy filtering logic in `GET /api/experiences`
+## Known Issues
 
-3. **Prompt**: "Create a Flutter service class for making HTTP requests to the Flask API"
-   - **Result**: Generated `api_service.dart` with all CRUD methods and proper error handling
+- Backend needs ~30 seconds to wake up on first request (free tier limitation)
+- SQLite isn't ideal for production but works fine for this project
+- Session storage is in-memory, so restarting the backend logs everyone out
 
-4. **Prompt**: "Build a Flutter login screen with form validation and error messages"
-   - **Result**: Created `login_screen.dart` with Material Design, validation, and state management
+## What I'd Do Differently
 
-5. **Prompt**: "Create a main feed screen with search bar, filters, sort dropdown, and pagination controls"
-   - **Result**: Generated `main_feed_screen.dart` with all interactive elements properly wired
+If I were to rebuild this:
+- Maybe use PostgreSQL instead of SQLite for a more realistic setup
+- Add Redis for session storage
+- Implement refresh tokens instead of just bearer tokens
+- Add unit tests
+- Maybe add image upload for company logos
 
-6. **Prompt**: "Design an experience detail screen showing all fields including the calculated timeline"
-   - **Result**: Built `experience_detail_screen.dart` with beautiful card layouts and info sections
+But for the scope of this assignment, I think it covers everything pretty well.
 
-7. **Prompt**: "Implement a create/edit experience form with date pickers and real-time timeline calculation"
-   - **Result**: Created `create_edit_experience_screen.dart` with form validation and date selection
+## Resources
 
-## 🎨 Code Quality
+Documentation I created:
+- `docs/API_DOCUMENTATION.md` - Detailed API reference
+- `backend/README_ARCHITECTURE.md` - Explanation of the backend structure
+- `OOP_REFACTORING_SUMMARY.md` - How I refactored to OOP principles
 
-### OOP Concepts Applied
-- **Encapsulation**: Models encapsulate data and behavior (e.g., `Experience.calculate_timeline_days()`)
-- **Abstraction**: Service classes abstract away HTTP details
-- **Modularity**: Clear separation of concerns (models, services, screens, widgets)
-- **Clean Code**: Consistent naming, proper structure, comprehensive comments
+## Running Locally
 
-### Best Practices
-- ✅ RESTful API design
-- ✅ Secure password hashing
-- ✅ Input validation on both frontend and backend
-- ✅ Error handling and user feedback
-- ✅ Responsive UI design
-- ✅ Code organization and modularity
-
-## 📸 Screenshots & Demo
-
-### Development History
-
-All development commits are available in the Git log, showing hourly progress:
-- Initial project setup
-- Backend implementation
-- Frontend screens
-- Integration and testing
-- Final polish
-
-To view commit history:
+Quick start:
 ```bash
-git log --oneline --graph
+# Terminal 1 - Backend
+cd backend
+pip install -r requirements.txt
+python3 app.py
+
+# Terminal 2 - Frontend
+cd frontend
+flutter pub get
+flutter run -d chrome
 ```
 
-## 👨‍💻 Development Notes
-
-### Code Evolution
-Initial commits show the iterative process:
-1. Basic authentication system
-2. CRUD operations implementation
-3. UI/UX enhancements
-4. Search and filter features
-5. Final integration and bug fixes
-
-### Architectural Decisions
-
-1. **SQLite Database**: Chosen for simplicity and zero configuration
-2. **Session-based Auth**: In-memory storage for development; production should use Redis
-3. **Provider Pattern**: For state management in Flutter (recommended approach)
-4. **Material Design 3**: Modern, accessible UI components
-
-## 🏆 Assignment Requirements Met
-
-| Requirement | Status | Implementation |
-|------------|--------|----------------|
-| Authentication System | ✅ | Username/password with session management |
-| Text Field | ✅ | Job Title, Company Name, Description |
-| Enum Field | ✅ | Difficulty dropdown (Easy/Medium/Hard) |
-| Boolean Field | ✅ | Offer Received switch |
-| Calculated Field | ✅ | Timeline Days (from 2 date inputs) |
-| CRUD Operations | ✅ | Full Create, Read, Update, Delete |
-| Pagination | ✅ | 10 items per page with controls |
-| Filter | ✅ | By difficulty level |
-| **Bonus**: Search | ✅ | Full-text search |
-| **Bonus**: Sorting | ✅ | Multiple sort options |
-| Clean Code | ✅ | OOP, modular, well-organized |
-| Documentation | ✅ | Comprehensive README |
-| AI Usage | ✅ | 6+ prompts documented |
-
-## 📞 Support
-
-For any issues or questions, please refer to the code comments or create an issue in the repository.
-
-## 📄 License
-
-This project is created for educational purposes as part of an AI Campus Assignment.
-
----
-
-**Built with ❤️ using Flutter, Flask, and AI-assisted development**
-
+That's pretty much it. The project demonstrates full-stack development with proper authentication, CRUD operations, and clean architecture. Feel free to check out the deployed version or run it locally.

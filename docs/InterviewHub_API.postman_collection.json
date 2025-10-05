@@ -1,0 +1,335 @@
+{
+  "info": {
+    "name": "InterviewHub API",
+    "description": "Complete API collection for InterviewHub - Interview Experience Sharing Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('auth_token', jsonData.token);",
+                  "    pm.collectionVariables.set('auth_token', jsonData.token);",
+                  "    console.log('Token saved:', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Register a new user account. Password must be at least 6 characters. Returns authentication token."
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('auth_token', jsonData.token);",
+                  "    pm.collectionVariables.set('auth_token', jsonData.token);",
+                  "    console.log('Token saved:', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login with existing credentials. Returns authentication token."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            },
+            "description": "Get information about the currently authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Logout current user and invalidate session token."
+          },
+          "response": []
+        }
+      ],
+      "description": "User authentication endpoints including register, login, logout, and user info."
+    },
+    {
+      "name": "Experiences",
+      "item": [
+        {
+          "name": "Get All Experiences",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/experiences?page=1&per_page=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "experiences"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10",
+                  "description": "Items per page"
+                },
+                {
+                  "key": "difficulty",
+                  "value": "Medium",
+                  "description": "Filter by difficulty (Easy, Medium, Hard)",
+                  "disabled": true
+                },
+                {
+                  "key": "offer_received",
+                  "value": "true",
+                  "description": "Filter by offer status",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "google",
+                  "description": "Search term",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "date_desc",
+                  "description": "Sort order (date_desc, date_asc, difficulty)",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get paginated list of experiences with optional filtering, sorting, and search."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Experience by ID",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/experiences/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "experiences", "1"]
+            },
+            "description": "Get detailed information about a specific experience."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Experience",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_title\": \"Software Engineer\",\n  \"company_name\": \"Google\",\n  \"experience_description\": \"Had 3 rounds of interviews including coding, system design, and behavioral. The coding round was challenging with LeetCode hard problems. Overall great experience!\",\n  \"difficulty\": \"Hard\",\n  \"offer_received\": true,\n  \"application_date\": \"2024-09-01\",\n  \"final_decision_date\": \"2024-09-30\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/experiences",
+              "host": ["{{base_url}}"],
+              "path": ["api", "experiences"]
+            },
+            "description": "Create a new interview experience. Requires authentication."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Experience",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_title\": \"Senior Software Engineer\",\n  \"difficulty\": \"Medium\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/experiences/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "experiences", "1"]
+            },
+            "description": "Update an existing experience. Only the author can update. All fields optional."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Experience",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/experiences/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "experiences", "1"]
+            },
+            "description": "Delete an experience. Only the author can delete."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Experiences",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/experiences?search=engineer&difficulty=Hard&sort_by=date_desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "experiences"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "engineer"
+                },
+                {
+                  "key": "difficulty",
+                  "value": "Hard"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "date_desc"
+                }
+              ]
+            },
+            "description": "Example: Search for 'engineer' with Hard difficulty, sorted by date."
+          },
+          "response": []
+        }
+      ],
+      "description": "CRUD operations for interview experiences with pagination, filtering, sorting, and search."
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/health",
+          "host": ["{{base_url}}"],
+          "path": ["api", "health"]
+        },
+        "description": "Check if the API is running and healthy."
+      },
+      "response": []
+    }
+  ]
+}
+
